@@ -54,7 +54,6 @@ You’ll be guided through:
 1. A short diagnostic questionnaire  
 2. A radar chart visualizing your results  
 3. A summary of which dimensions may need attention  
-4. A tip on how to improve  
 
 """)
 # --- App Title ---
@@ -111,6 +110,7 @@ if priorities:
 else:
     st.success("✅ All dimensions are above the threshold.")
  
+
 
 
 
