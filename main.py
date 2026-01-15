@@ -96,7 +96,8 @@ for dimension, questions in data.items():
 # --- Step 3: Radar Chart ---
 if all_answered:
     st.header("Step 2: Review Overall Diagnostic Results")
-    st.markdown("_The radar chart below visualizes your the current state of the department/company across the six dimensions. Each axis represents one dimension, and the closer to the edge, the stronger the dimension._")
+    st.markdown("_The radar chart below visualizes your the current state of the department/company across the six dimensions. Each axis represents one dimension, and the closer to the edge, the stronger the dimension._") 
+
     categories = list(dimension_scores.keys())
     values = list(dimension_scores.values())
 
@@ -118,14 +119,39 @@ if all_answered:
     st.plotly_chart(fig, config={"staticPlot": True})
 
 # --- Step 4: Priorities ---
-st.header("Step 3: Identify High Priority Areas")
-st.markdown("_Dimensions scoring below the threshold (3.0) are highlighted here. These are potential focus areas for improvement to enhance this department/company's data-drivenness._")
+    st.header("Step 3: Identify High Priority Areas")
+    st.markdown(if all_answered:
+    st.header("Step 2: Review Overall Diagnostic Results")
+    st.markdown("_The radar chart below visualizes the current state of your department/company across the six dimensions. Each axis represents one dimension, and the closer to the edge, the stronger the dimension._") 
 
- 
-priority_threshold = 3.0
-priorities = [d for d, score in dimension_scores.items() if score < priority_threshold]
+    categories = list(dimension_scores.keys())
+    values = list(dimension_scores.values())
 
-if priorities:
+    fig = go.Figure(
+        data=[
+            go.Scatterpolar(
+                r=values + [values[0]],
+                theta=categories + [categories[0]],
+                fill='toself'
+            )
+        ]
+    )
+
+    fig.update_layout(
+        polar=dict(radialaxis=dict(visible=True, range=[1, 5])),
+        showlegend=False
+    )
+
+    st.plotly_chart(fig, config={"staticPlot": True})
+
+    # --- Step 4: Priorities ---
+    st.header("Step 3: Identify High Priority Areas")
+    st.markdown("_Dimensions scoring below the threshold (3.0) are highlighted here. These are potential focus areas for improvement to enhance this department/company's data-drivenness._")
+
+    priority_threshold = 3.0
+    priorities = [d for d, score in dimension_scores.items() if score < priority_threshold]
+
+    if priorities:
         st.warning("⚠️ The following dimensions need attention:")
         for p in priorities:
             st.write(f"- **{p}** (Score: {dimension_scores[p]:.2f})")
@@ -133,7 +159,7 @@ if priorities:
         st.success("✅ All dimensions are above the threshold.")
 else:
     st.info("📝 Please answer all questions to view the results.")
- 
+
 
 
 
