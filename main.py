@@ -67,49 +67,74 @@ for dimension, questions in data.items():
     st.subheader(dimension)
     for i, question in enumerate(questions):
         key = f"{dimension}_{i}"
+
         selected_label = st.radio(
             question,
             options=list(likert_options.keys()),
-            index=2,
+            index=None,          # ✅ no preselected option
             key=key,
             horizontal=True
         )
-        st.session_state.responses[key] = likert_options[selected_label]
+
+        if selected_label is not None:
+            st.session_state.responses[key] = likert_options[selected_label]
  
 # --- Step 2: Calculate Scores ---
 dimension_scores = {}
+all_answered = True
+
 for dimension, questions in data.items():
     keys = [f"{dimension}_{i}" for i in range(len(questions))]
+
+    if not all(k in st.session_state.responses for k in keys):
+        all_answered = False
+        break
+
     values = [st.session_state.responses[k] for k in keys]
-    avg_score = sum(values) / len(values)
-    dimension_scores[dimension] = avg_score
+    dimension_scores[dimension] = sum(values) / len(values)
  
 # --- Step 3: Radar Chart ---
-st.header("Step 2: Review Overall Diagnostic Results")
-st.markdown("_The radar chart below visualizes your the current state of the department/company across the six dimensions. Each axis represents one dimension, and the closer to the edge, the stronger the dimension._")
+if all_answered:
+    st.header("Step 2: Review Overall Diagnostic Results")
+    st.markdown("_The radar chart below visualizes your the current state of the department/company across the six dimensions. Each axis represents one dimension, and the closer to the edge, the stronger the dimension._")
+    categories = list(dimension_scores.keys())
+    values = list(dimension_scores.values())
 
- 
-categories = list(dimension_scores.keys())
-values = list(dimension_scores.values())
- 
-fig = go.Figure( data=[go.Scatterpolar( r=values + [values[0]], theta=categories + [categories[0]], fill='toself' )] ) 
-fig.update_layout( polar=dict(radialaxis=dict(visible=True, range=[1, 5])), showlegend=False ) 
-st.plotly_chart(fig, config={"staticPlot": True})
+    fig = go.Figure(
+        data=[
+            go.Scatterpolar(
+                r=values + [values[0]],
+                theta=categories + [categories[0]],
+                fill='toself'
+            )
+        ]
+    )
+
+    fig.update_layout(
+        polar=dict(radialaxis=dict(visible=True, range=[1, 5])),
+        showlegend=False
+    )
+
+    st.plotly_chart(fig, config={"staticPlot": True})
+
 # --- Step 4: Priorities ---
 st.header("Step 3: Identify High Priority Areas")
 st.markdown("_Dimensions scoring below the threshold (3.0) are highlighted here. These are potential focus areas for improvement to enhance this department/company's data-drivenness._")
 
  
 priority_threshold = 3.0
-priorities = [d for d, score in dimension_scores.items() if score < priority_threshold]
- 
-if priorities:
-    st.warning("⚠️ The following dimensions scored below the threshold of 3.0 and need attention:")
-    for p in priorities:
-        st.write(f"- **{p}** (Score: {dimension_scores[p]:.2f})")
+    priorities = [d for d, score in dimension_scores.items() if score < priority_threshold]
+
+    if priorities:
+        st.warning("⚠️ The following dimensions need attention:")
+        for p in priorities:
+            st.write(f"- **{p}** (Score: {dimension_scores[p]:.2f})")
+    else:
+        st.success("✅ All dimensions are above the threshold.")
 else:
-    st.success("✅ All dimensions are above the threshold.")
+    st.info("📝 Please answer all questions to view the results.")
  
+
 
 
 
