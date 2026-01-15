@@ -61,7 +61,7 @@ st.title("📊 Data-drivenness Assessment")
  
 # --- Step 1: Respond to Questions ---
 st.header("Step 1: Respond to Diagnostic Questions")
-st.markdown("_Please rate the extent to which you agree with the following statements regarding a certain department or company. Your responses will help identify strengths and improvement areas across six key dimensions._")
+st.markdown("_Please rate the extent to which you agree with the following statements regarding your department or company. Your responses will help identify strengths and improvement areas across six key dimensions._")
  
 for dimension, questions in data.items():
     st.subheader(dimension)
@@ -96,7 +96,7 @@ for dimension, questions in data.items():
 # --- Step 3: Radar Chart ---
 if all_answered:
     st.header("Step 2: Review Overall Diagnostic Results")
-    st.markdown("_The radar chart below visualizes your the current state of the department/company across the six dimensions. Each axis represents one dimension, and the closer to the edge, the stronger the dimension._") 
+    st.markdown("_The radar chart below visualizes the current state of your department/company across the six dimensions. Each axis represents one dimension, and the closer to the edge, the stronger the dimension._") 
 
     categories = list(dimension_scores.keys())
     values = list(dimension_scores.values())
@@ -134,6 +134,7 @@ if all_answered:
         st.success("✅ All dimensions are above the threshold.")
 else:
     st.info("📝 Please answer all questions to view the results.")
+
 
 
 
