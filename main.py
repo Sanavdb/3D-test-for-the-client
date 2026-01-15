@@ -123,9 +123,9 @@ st.markdown("_Dimensions scoring below the threshold (3.0) are highlighted here.
 
  
 priority_threshold = 3.0
-    priorities = [d for d, score in dimension_scores.items() if score < priority_threshold]
+priorities = [d for d, score in dimension_scores.items() if score < priority_threshold]
 
-    if priorities:
+if priorities:
         st.warning("⚠️ The following dimensions need attention:")
         for p in priorities:
             st.write(f"- **{p}** (Score: {dimension_scores[p]:.2f})")
@@ -134,6 +134,7 @@ priority_threshold = 3.0
 else:
     st.info("📝 Please answer all questions to view the results.")
  
+
 
 
 
