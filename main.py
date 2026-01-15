@@ -118,31 +118,6 @@ if all_answered:
 
     st.plotly_chart(fig, config={"staticPlot": True})
 
-# --- Step 4: Priorities ---
-    st.header("Step 3: Identify High Priority Areas")
-    st.markdown(if all_answered:
-    st.header("Step 2: Review Overall Diagnostic Results")
-    st.markdown("_The radar chart below visualizes the current state of your department/company across the six dimensions. Each axis represents one dimension, and the closer to the edge, the stronger the dimension._") 
-
-    categories = list(dimension_scores.keys())
-    values = list(dimension_scores.values())
-
-    fig = go.Figure(
-        data=[
-            go.Scatterpolar(
-                r=values + [values[0]],
-                theta=categories + [categories[0]],
-                fill='toself'
-            )
-        ]
-    )
-
-    fig.update_layout(
-        polar=dict(radialaxis=dict(visible=True, range=[1, 5])),
-        showlegend=False
-    )
-
-    st.plotly_chart(fig, config={"staticPlot": True})
 
     # --- Step 4: Priorities ---
     st.header("Step 3: Identify High Priority Areas")
@@ -159,6 +134,7 @@ if all_answered:
         st.success("✅ All dimensions are above the threshold.")
 else:
     st.info("📝 Please answer all questions to view the results.")
+
 
 
 
